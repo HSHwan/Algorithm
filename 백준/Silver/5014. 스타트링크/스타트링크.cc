@@ -19,6 +19,10 @@ void bfs(int pos) {
     while (!posQ.empty()) {
         nowPos = posQ.front();
         posQ.pop();
+
+        if (nowPos == targetFloor)
+            return;
+
         for (int step : {up, -down}) {
             int nextPos = nowPos + step;
             if (nextPos < 1 || nextPos > maxFloor)
