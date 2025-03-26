@@ -15,8 +15,7 @@ int main() {
     for (int i = 0; i < arrLen; i++)
         cin >> arr[i];
 
-	int low = 0;
-	int high = 0;
+	int low = 0, high = 0;
 	int sum = arr[0];
 	int len = arrLen + 1;
 
@@ -31,5 +30,6 @@ int main() {
 	}
 
 	if (len == arrLen + 1) len = 0;
+    
     cout << len;
 }
