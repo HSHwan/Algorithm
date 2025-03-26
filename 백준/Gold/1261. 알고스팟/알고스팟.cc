@@ -18,7 +18,7 @@ bool isInMaze(pii pos) {
 }
 
 int findWallMinNum(pii pos) {
-    vector<vector<int>> wallCheck(row + 1, vector<int>(column + 1, row * column));
+    vector<vector<int>> wallCheck(row, vector<int>(column, row * column));
     pii nowPos;
     queue<pii> posQ;
     posQ.push(pos);
