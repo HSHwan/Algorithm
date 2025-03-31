@@ -11,6 +11,7 @@ using namespace std;
 typedef pair<int, int> pii;
 
 int sudoku[SUDOKU_SIZE][SUDOKU_SIZE];
+vector<int> emptyCases[SUDOKU_SIZE][SUDOKU_SIZE];
 vector<pii> emptyPos;
 
 void checkSudokuNum(int* num, pii pos) {
@@ -26,6 +27,18 @@ void checkSudokuNum(int* num, pii pos) {
     }
 }
 
+void checkEmptyCases() {
+    for (pii pos : emptyPos) {
+        int num[10] = {0, };
+        checkSudokuNum(num, pos);
+        int minCount = *min_element(num + 1, num + 10);
+        for (int i = 1; i <= 9; i++) {
+            if (num[i] == minCount)
+                emptyCases[pos.X][pos.Y].push_back(i);
+        }
+    }
+}
+
 bool isNotSudoku(pii pos) {
     int num[10] = {0, };
     checkSudokuNum(num, pos);
@@ -36,8 +49,8 @@ bool isNotSudoku(pii pos) {
 bool dfs(int idx) {
     if (idx == emptyPos.size()) return true;
     pii pos = emptyPos[idx];
-    for (int i = 1; i <= 9; i++) {
-        sudoku[pos.X][pos.Y] = i;
+    for (int nowNum : emptyCases[pos.X][pos.Y]) {
+        sudoku[pos.X][pos.Y] = nowNum;
         if (isNotSudoku(pos))   continue;
         if (dfs(idx + 1))   return true;
     }
@@ -63,6 +76,7 @@ int main() {
                 emptyPos.push_back({i, j});
         }
     }
+    checkEmptyCases();
     dfs(0);
     printSudoku();   
 }
