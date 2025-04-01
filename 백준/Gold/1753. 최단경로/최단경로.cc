@@ -49,8 +49,8 @@ int main() {
     findShortestPath(start);
 
     for (int i = 1; i <= vertexNum; i++) {
-        if (dist[i] == INF)    cout << "INF";
-        else                        cout << dist[i];
+        if (dist[i] == INF) cout << "INF";
+        else                cout << dist[i];
         cout << '\n';
     }
 }
