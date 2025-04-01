@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 #define MAX 4000
@@ -7,7 +6,7 @@
 using namespace std;
 
 int arr[4][MAX];
-vector<int> arrSum[2];
+int arrSum[2][MAX * MAX];
 
 int main() {
     FAST_IO
@@ -20,9 +19,9 @@ int main() {
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < arrLen; j++) {
             for (int k = 0; k < arrLen; k++)
-                arrSum[i].push_back(arr[2 * i][j] + arr[2 * i + 1][k]);
+                arrSum[i][j * arrLen + k] = arr[2 * i][j] + arr[2 * i + 1][k];
         }
-        sort(arrSum[i].begin(), arrSum[i].end());
+        sort(arrSum[i], arrSum[i] + arrLen * arrLen);
     }
 
     long long count = 0;
