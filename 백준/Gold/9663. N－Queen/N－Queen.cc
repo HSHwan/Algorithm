@@ -6,7 +6,6 @@
 using namespace std;
 
 int queenNum;
-int board[MAX][MAX];
 bool col[MAX], leftDiag[2 * MAX], rightDiag[2 * MAX];
 int nQueensNum = 0;
 
