@@ -13,7 +13,7 @@ using namespace std;
 
 typedef pair<int, int> pii;
 
-int time[2 * MAX + 1];
+int time[MAX];
 
 void findTarget(int start) {
     priority_queue<pii, vector<pii>, greater<>> pq;
