@@ -6,7 +6,7 @@
 using namespace std;
 
 int tableLen, sumCount;
-int table[MAX + 1][MAX + 1], tableSum[MAX + 1][MAX + 1];
+int tableSum[MAX + 1][MAX + 1];
 
 int main() {
     FAST_IO
@@ -14,8 +14,8 @@ int main() {
 
     for (int i = 1; i <= tableLen; i++) {
         for (int j = 1; j <= tableLen; j++) {
-            cin >> table[i][j];
-            tableSum[i][j] = table[i][j] + tableSum[i][j - 1] + tableSum[i - 1][j] - tableSum[i - 1][j - 1];
+            cin >> tableSum[i][j];
+            tableSum[i][j] += tableSum[i][j - 1] + tableSum[i - 1][j] - tableSum[i - 1][j - 1];
         }
     }
 
