@@ -4,7 +4,7 @@
 #include <queue>
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 #define MAX 800
-#define INF 1e9
+#define INF 1e8
 #define W first
 #define V second
 
@@ -51,7 +51,7 @@ int main() {
     findShortestPathDist(1);
     findShortestPathDist(v1);
     findShortestPathDist(v2);
-    if (dist[1][v1] == INF || dist[v1][v2] == INF || dist[v2][v] == INF)    cout << -1;
-    else if (dist[1][v2] == INF || dist[v2][v1] == INF || dist[v1][v] == INF)    cout << -1;
-    else    cout << min(dist[1][v1] + dist[v1][v2] + dist[v2][v], dist[1][v2] + dist[v2][v1] + dist[v1][v]);
+    int minDist = min(dist[1][v1] + dist[v1][v2] + dist[v2][v], dist[1][v2] + dist[v2][v1] + dist[v1][v]);
+    if (minDist >= INF) cout << -1;
+    else    cout << minDist;
 }
