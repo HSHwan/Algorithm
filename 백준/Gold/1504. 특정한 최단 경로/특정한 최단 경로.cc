@@ -14,7 +14,7 @@ typedef pair<int, int> pii;
 
 int v, e;
 vector<pii> edge[MAX + 1];
-unsigned long long dist[MAX + 1][MAX + 1];
+int dist[MAX + 1][MAX + 1];
 
 void findShortestPathDist(int start) {
     dist[start][start] = 0;
