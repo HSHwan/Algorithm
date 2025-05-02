@@ -1,6 +1,5 @@
 #include <iostream>
-#include <vector>
-#include <queue>
+
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 #define MAX 11
 #define MAX_TILT 10
@@ -34,7 +33,7 @@ void tiltBall(pii& ball, pii dir) {
 }
 
 int findBallEscapeCount(pii red, pii blue) {
-    vector<pii> dirs = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+    pii dirs[4] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
     int idx = 0, now = 0;
     Ball ballArr[1 << 11];
     ballArr[idx++] = {red, blue, -1, 1};
