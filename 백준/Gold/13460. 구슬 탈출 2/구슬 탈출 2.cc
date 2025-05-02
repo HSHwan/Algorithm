@@ -14,7 +14,7 @@ typedef pair<int, int> pii;
 
 struct Ball {
     pii r, b;
-    int tiltCount;
+    int dirNum, tiltCount;
 };
 
 int row, col;
@@ -34,25 +34,25 @@ void tiltBall(pii& ball, pii dir) {
 }
 
 int findBallEscapeCount(pii red, pii blue) {
-    Ball nowBall = {red, blue, 0};
-    queue<Ball> ballQ;
-    ballQ.push(nowBall);
-
     vector<pii> dirs = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
-    while (!ballQ.empty()) {
-        nowBall = ballQ.front();
-        ballQ.pop();
+    int idx = 0, now = 0;
+    Ball ballArr[1 << 11];
+    ballArr[idx++] = {red, blue, -1, 1};
 
-        if (nowBall.b == ESCAPE)    continue;
+    while (now < idx) {
+        Ball nowBall = ballArr[now++];
         if (nowBall.tiltCount > MAX_TILT)   break;
-        if (nowBall.r == ESCAPE)    return nowBall.tiltCount;
 
-        for (pii dir : dirs) {
+        for (int i = 0; i < 4; i++) {
+            if (nowBall.dirNum == i || nowBall.dirNum == (i ^ 1)) continue;
+            pii dir = dirs[i];
             Ball nextBall = nowBall;
-            nextBall.tiltCount++;
             tiltBall(nextBall.r, dir);
             tiltBall(nextBall.b, dir);
-            if (nextBall.r != ESCAPE && nextBall.r == nextBall.b) {
+
+            if (nextBall.b == ESCAPE)   continue;
+            if (nextBall.r == ESCAPE)   return nextBall.tiltCount;
+            if (nextBall.r == nextBall.b) {
                 if (dir.X * (nowBall.r.X - nowBall.b.X) > 0 || dir.Y * (nowBall.r.Y - nowBall.b.Y) > 0) {
                     nextBall.b.X -= dir.X;
                     nextBall.b.Y -= dir.Y;
@@ -62,7 +62,11 @@ int findBallEscapeCount(pii red, pii blue) {
                     nextBall.r.Y -= dir.Y;
                 }
             }
-            ballQ.push(nextBall);
+            if (nowBall.b == nextBall.b && nowBall.r == nextBall.r) continue;
+
+            nextBall.dirNum = i;
+            nextBall.tiltCount++;
+            ballArr[idx++] = nextBall;
         }
     }
 
