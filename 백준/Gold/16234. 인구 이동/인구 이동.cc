@@ -16,49 +16,41 @@ int len, low, high;
 int land[MAX_LEN][MAX_LEN];
 bool visited[MAX_LEN][MAX_LEN];
 pii dirs[4] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+vector<pii> nations;
+int sum = 0;
+bool isMoved;
 
 bool isOutOfRange(pii pos) {
     return pos.X < 0 || pos.X >= len || pos.Y < 0 || pos.Y >= len;
 }
 
-bool movePeople(pii start) {
-    vector<pii> nations;
-    queue<pii> posQ;
-    posQ.push(start);
-    visited[start.X][start.Y] = true;
-
-    int sum = 0;
-    while (!posQ.empty()) {
-        pii nowPos = posQ.front();
-        posQ.pop();
-
-        nations.push_back(nowPos);
-        sum += land[nowPos.X][nowPos.Y];
-
-        for (pii dir : dirs) {
-            pii nextPos = {nowPos.X + dir.X, nowPos.Y + dir.Y};
-            if (isOutOfRange(nextPos) || visited[nextPos.X][nextPos.Y])   continue;
-            int diff = abs(land[nowPos.X][nowPos.Y] - land[nextPos.X][nextPos.Y]);
-            if (diff >= low && diff <= high) {
-                visited[nextPos.X][nextPos.Y] = true;
-                posQ.push(nextPos);
-            }
-        }
+void dfs(pii pos) {
+    visited[pos.X][pos.Y] = true;
+    sum += land[pos.X][pos.Y];
+    nations.push_back(pos);
+    for (pii dir : dirs) {
+        pii nextPos = {pos.X + dir.X, pos.Y + dir.Y};
+        if (isOutOfRange(nextPos) || visited[nextPos.X][nextPos.Y]) continue;
+        int diff = abs(land[pos.X][pos.Y] - land[nextPos.X][nextPos.Y]);
+        if (diff >= low && diff <= high)    dfs(nextPos);
     }
 
-    int unit = sum / nations.size();
-    for (pii pos : nations) land[pos.X][pos.Y] = unit;
-    
-    return nations.size() >= 2;
+    if (nations.size() > 1 && pos == nations[0]) {
+        sum /= nations.size();
+        for (pii nation : nations)  land[nation.X][nation.Y] = sum;
+        isMoved = true;
+    }
 }
 
 bool move() {
     memset(visited, false, sizeof(visited));
-    bool isMoved = false;
+    isMoved = false;
     for (int i = 0; i < len; i++) {
         for (int j = 0; j < len; j++) {
             if (visited[i][j])  continue;
-            isMoved |= movePeople({i, j});
+            dfs({i, j});
+            sum = 0;
+            nations.clear();
         }
     }
 
@@ -74,7 +66,11 @@ int main() {
     }
 
     int moveCount = 0;
-    while (move())  moveCount++;
+    while (true) {
+        move();
+        if (isMoved)    moveCount++;
+        else    break;
+    }
     
     cout << moveCount;
 }
