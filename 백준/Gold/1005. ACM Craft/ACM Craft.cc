@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 #include <queue>
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
@@ -36,22 +35,18 @@ void build() {
     buildTime.resize(buildNum + 1);
     for (int i = 1; i <= buildNum; i++) cin >> buildTime[i];
 
-    graph.clear();
-    graph.resize(buildNum + 1);
-    inDegree.resize(buildNum + 1);
-    fill(inDegree.begin(), inDegree.end(), 0);
+    graph = vector<vector<int>>(buildNum + 1);
+    inDegree = vector<int>(buildNum + 1, 0);
+    prevBuild = vector<int>(buildNum + 1, 0);
     for (int i = 0; i < ruleNum; i++) {
         int x, y;
         cin >> x >> y;
         graph[x].push_back(y);
         inDegree[y]++;
     }
-
+    
     int w;
     cin >> w;
-
-    prevBuild.resize(buildNum + 1);
-    fill(prevBuild.begin(), prevBuild.end(), 0);
     cout << findBuildTime(buildNum, w) << '\n';
 }
 
