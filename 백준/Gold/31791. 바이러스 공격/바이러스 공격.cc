@@ -9,55 +9,79 @@ using namespace std;
 
 typedef pair<int, int> pii;
 
-int row, col, infect, delay;
-vector<string> map;
-
 struct Virus {
     pii pos;
     int time;
 };
 
+int row, col, infect, delay;
+vector<string> map;
+queue<Virus> virusQ, buildQ;
+
 bool isOutOfRange(pii pos) {
     return pos.X < 0 || pos.X >= row || pos.Y < 0 || pos.Y >= col;
 }
 
+Virus getNextVirus() {
+    if (virusQ.empty()) {
+        Virus next = buildQ.front();
+        buildQ.pop();
+        return next;
+    }
+
+    if (buildQ.empty()) {
+        Virus next = virusQ.front();
+        virusQ.pop();
+        return next;
+    }
+
+    int virusTime = virusQ.front().time, buildTime = buildQ.front().time;
+    if (virusTime < buildTime) {
+        Virus next = virusQ.front();
+        virusQ.pop();
+        return next;
+    }
+    else {
+        Virus next = buildQ.front();
+        buildQ.pop();
+        return next;
+    }
+}
+
 void solve(vector<pii> virus) {
-    queue<Virus> q;
-    vector<vector<int>> visited(row, vector<int>(col, -1));
+    vector<vector<int>> visited(row, vector<int>(col));
     for (pii v : virus) {
-        visited[v.X][v.Y] = 0;
-        q.push({v, 0});
+        visited[v.X][v.Y] = 1;
+        virusQ.push({v, 0});
     }
     pii dirs[4] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
-    while (!q.empty()) {
-        Virus now = q.front();
+    while (!virusQ.empty() || !buildQ.empty()) {
+        Virus now = getNextVirus();
         pii nowPos = now.pos;
-        q.pop();
 
-        if (now.time == infect) continue;
+        if (now.time > infect)  break;
+
+        visited[nowPos.X][nowPos.Y] = 1;
 
         for (pii dir : dirs) {
             pii nextPos = {nowPos.X + dir.X, nowPos.Y + dir.Y};
+            if (isOutOfRange(nextPos) || visited[nextPos.X][nextPos.Y]) continue;
+            visited[nextPos.X][nextPos.Y] = -1;
             Virus next = {nextPos, now.time + 1};
-            if (isOutOfRange(nextPos))  continue;
             if (map[nextPos.X][nextPos.Y] == '#') {
                 next.time += delay;
-                if (next.time > infect) {
-                    if (visited[nextPos.X][nextPos.Y] == -1)  visited[nextPos.X][nextPos.Y] = -2;
-                    continue;
-                }
-            }   
-            if (visited[nextPos.X][nextPos.Y] > 0 && next.time >= visited[nextPos.X][nextPos.Y]) continue;
-            visited[nextPos.X][nextPos.Y] = next.time;
-            q.push(next);
+                buildQ.push(next);
+            }
+            else    virusQ.push(next);
+            
         }
     }
 
     bool isSafe = false;
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
-            if (visited[i][j] < 0) {
+            if (visited[i][j] != 1) {
                 cout << i + 1 << ' ' << j + 1 << '\n';   
                 isSafe = true;
             }  
