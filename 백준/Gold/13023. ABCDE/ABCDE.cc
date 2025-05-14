@@ -1,14 +1,13 @@
 #include <iostream>
 #include <vector>
-#include <cstring>
 
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-
+#define MAX 2000
 using namespace std;
 
 int v, e;
 vector<vector<int>> graph;
-vector<bool> visited;
+bool visited[MAX];
 bool exists = false;
 
 void dfs(int v, int cnt) {
@@ -37,7 +36,6 @@ int main() {
         graph[v].push_back(u);
     }
 
-    visited.assign(v, false);
     for (int i = 0; i < v; i++) {
         if (!graph[i].empty()) {
             visited[i] = true;
