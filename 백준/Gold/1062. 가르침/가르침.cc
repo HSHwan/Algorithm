@@ -6,37 +6,19 @@
 using namespace std;
 
 int word_cnt = 0;
-vector<string> words;
-bool alpha[26], used[26];
+vector<int> words;
 
-int check_words() {
-    int cnt = 0;
-    for (string word : words) {
-        bool read = true;
-        for (int i = 4; i < word.size() - 4; i++) {
-            if (!alpha[word[i] - 'a']) {
-                read = false;
-                break;
-            }
-        }
-        if (read)   cnt++;
-    }
-    return cnt;
-}
-
-void backtrack(int idx, int k) {
-    word_cnt = max(check_words(), word_cnt);
-
-    if (k == 0 || idx == 25) {
+void backtrack(int idx, int k, int used) {
+    if (k == 0) {
+        int cnt = 0;
+        for (int word : words)  if ((word | used) == used)  cnt++;
+        word_cnt = max(cnt, word_cnt);
         return;
     }
 
-    for (int i = idx + 1; i < 26; i++) {
-        if (!alpha[i] && used[i]) {
-            alpha[i] = true;
-            backtrack(i, k - 1);
-            alpha[i] = false;
-        }
+    for (int i = idx; i < 26; i++) {
+        if (used & (1 << i))    continue;
+        backtrack(i, k - 1, used | (1 << i));
     }
 }
 
@@ -46,19 +28,15 @@ int main() {
     cin >> n >> k;
     words.resize(n);
     for (int i = 0; i < n; i++) {
-        cin >> words[i];
-        for (char ch : words[i])    used[ch - 'a'] = true;
+        string str;
+        cin >> str;
+        for (char ch : str) words[i] |= (1 << (ch - 'a'));
     }
 
-    if (k < 5) {
-        cout << 0;
-        return 0;
-    }
+    int used = 0;
+    for (char ch : string("acint")) used |= (1 << (ch - 'a'));
 
-    k -= 5;
-    for (char ch : string("acint")) alpha[ch - 'a'] = true;
-
-    backtrack(0, k);
+    if (k >= 5) backtrack(0, k - 5, used);
 
     cout << word_cnt;
 }
