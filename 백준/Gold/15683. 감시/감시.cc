@@ -1,9 +1,11 @@
 #include <iostream>
 #include <vector>
+#include <cstring>
 
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 #define X first
 #define Y second
+#define MAX 8
 #define CHECK -1
 
 using namespace std;
@@ -11,8 +13,7 @@ using namespace std;
 typedef pair<int, int> pii;
 
 int row, col;
-
-vector<vector<int>> room;
+int room[MAX][MAX];
 vector<pii> cctv;
 pii dirs[4] = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
 int min_empty = 0;
@@ -46,15 +47,15 @@ void backtrack(int idx, int empty) {
 
     int type = room[current.X][current.Y];
     for (int i = 0; i < 4; i++) {
-        vector<vector<int>> temp = room;
-        int nxt_empty = empty;
+        int temp[MAX][MAX], nxt_empty = empty;
+        memcpy(temp, room ,sizeof(room));
         if ((type == 2 && i > 1) || (type == 5 && i > 0))   break;
         nxt_empty -= check(current, i);
         if (type == 5)  nxt_empty -= check(current, i + 1);
         if (type != 1 && type != 3) nxt_empty -= check(current, i + 2);
         if (type != 1 && type != 2) nxt_empty -= check(current, i + 3);
         backtrack(idx + 1, nxt_empty);
-        room = temp;
+        memcpy(room, temp,sizeof(room));
     }
 }
 
@@ -62,7 +63,6 @@ int main() {
     FAST_IO
     cin >> row >> col;
 
-    room.resize(row, vector<int>(col));
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
             cin >> room[i][j];
