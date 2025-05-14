@@ -21,20 +21,21 @@ bool isOutOfRange(pii pos) {
     return pos.X < 0 || pos.X >= row || pos.Y < 0 || pos.Y >= col;
 }
 
-int check(vector<vector<int>>& map, pii pos, pii dir, int empty) {
-    int remaining = empty;
-    while (!isOutOfRange(pos) && map[pos.X][pos.Y] != 6) {
-        if (!map[pos.X][pos.Y]) {
-            map[pos.X][pos.Y] = CHECK;
-            remaining--;
+int check(pii pos, int d) {
+    int cnt = 0;
+    pii dir = dirs[d % 4];
+    while (!isOutOfRange(pos) && room[pos.X][pos.Y] != 6) {
+        if (!room[pos.X][pos.Y]) {
+            room[pos.X][pos.Y] = CHECK;
+            cnt++;
         }   
         pos.X += dir.X;
         pos.Y += dir.Y;
     }
-    return remaining;
+    return cnt;
 }
 
-void backtrack(int idx, vector<vector<int>> prev, int empty) {
+void backtrack(int idx, int empty) {
     if (idx == cctv.size()) {
         min_empty = min(empty, min_empty);
         return;
@@ -42,57 +43,18 @@ void backtrack(int idx, vector<vector<int>> prev, int empty) {
 
     pii current = cctv[idx];
     int nxt_empty = empty;
-    vector<vector<int>> nxt(prev);
 
     int type = room[current.X][current.Y];
-    switch (type) {
-        case 1: {
-            for (pii dir : dirs) {
-                nxt = prev;
-                nxt_empty = check(nxt, {current.X + dir.X, current.Y + dir.Y}, dir, empty);
-                backtrack(idx + 1, nxt, nxt_empty);
-            }
-            break;
-        }
-        case 2: {
-            for (int i = 0; i < 2; i++) {
-                pii dir = dirs[i], rev_dir = dirs[i + 2];
-                nxt = prev;
-                nxt_empty = check(nxt, {current.X + dir.X, current.Y + dir.Y}, dir, empty);
-                nxt_empty = check(nxt, {current.X + rev_dir.X, current.Y + rev_dir.Y}, rev_dir, nxt_empty);
-                backtrack(idx + 1, nxt, nxt_empty);
-            }
-            break;
-        }
-        case 3: {
-            for (int i = 0; i < 4; i++) {
-                pii dir = dirs[i], rdir = dirs[(i + 1) % 4];
-                nxt = prev;
-                nxt_empty = check(nxt, {current.X + dir.X, current.Y + dir.Y}, dir, empty);
-                nxt_empty = check(nxt, {current.X + rdir.X, current.Y + rdir.Y}, rdir, nxt_empty);
-                backtrack(idx + 1, nxt, nxt_empty);
-            }
-            break;
-        }
-        case 4: {
-            for (int i = 0; i < 4; i++) {
-                nxt_empty = empty;
-                nxt = prev;
-                for (int j = 0; j < 4; j++) {
-                    if (i == j) continue;
-                    pii dir = dirs[j];
-                    nxt_empty = check(nxt, {current.X + dir.X, current.Y + dir.Y}, dir, nxt_empty);
-                }
-                backtrack(idx + 1, nxt, nxt_empty);
-            }
-            break;
-        }
-        case 5: {
-            for (pii dir : dirs)
-                nxt_empty = check(nxt, {current.X + dir.X, current.Y + dir.Y}, dir, nxt_empty);
-            backtrack(idx + 1, nxt, nxt_empty);
-            break;
-        }
+    for (int i = 0; i < 4; i++) {
+        vector<vector<int>> temp = room;
+        int nxt_empty = empty;
+        if ((type == 2 && i > 1) || (type == 5 && i > 0))   break;
+        nxt_empty -= check(current, i);
+        if (type == 5)  nxt_empty -= check(current, i + 1);
+        if (type != 1 && type != 3) nxt_empty -= check(current, i + 2);
+        if (type != 1 && type != 2) nxt_empty -= check(current, i + 3);
+        backtrack(idx + 1, nxt_empty);
+        room = temp;
     }
 }
 
@@ -109,7 +71,7 @@ int main() {
         }   
     }
 
-    backtrack(0, room, min_empty);
+    backtrack(0, min_empty);
     
     cout << min_empty;
 }
