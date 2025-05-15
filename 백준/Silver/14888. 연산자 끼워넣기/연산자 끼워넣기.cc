@@ -1,13 +1,14 @@
 #include <iostream>
 #include <vector>
-#include <set>
+#include <climits>
+
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 using namespace std;
 
 int n;
 vector<int> nums, ops(4);
-set<int> result;
+int res_max = INT_MIN, res_min = INT_MAX;
 
 int calc(int dest, int src, int op) {
     if (op == 0)    return dest + src;
@@ -18,7 +19,8 @@ int calc(int dest, int src, int op) {
 
 void backtrack(int idx, int prev) {
     if (idx == n) {
-        result.insert(prev);
+        res_max = max(prev, res_max);
+        res_min = min(prev, res_min);
         return;
     }
 
@@ -41,5 +43,5 @@ int main() {
 
     backtrack(1, nums[0]);
 
-    cout << *(--result.end()) << '\n' << *result.begin();
+    cout << res_max << '\n' << res_min;
 }
