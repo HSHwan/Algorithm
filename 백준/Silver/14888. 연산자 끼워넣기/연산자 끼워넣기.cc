@@ -13,10 +13,7 @@ int calc(int dest, int src, int op) {
     if (op == 0)    return dest + src;
     if (op == 1)    return dest - src;
     if (op == 2)    return dest * src;
-    else {
-        if (dest < 0)   return -((-dest) / src);
-        return dest / src;
-    }
+    else    return dest / src;
 }
 
 void backtrack(int idx, int prev) {
