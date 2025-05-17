@@ -15,7 +15,6 @@ typedef pair<pii, int> ppi;
 int row, col;
 vector<string> map;
 vector<vector<int>> fire;
-vector<vector<bool>> visited;
 int escape = INF;
 pii dirs[4] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
 
@@ -88,8 +87,6 @@ int main() {
     }
 
     setFire(fireQ);
-
-    visited.assign(row, vector<bool>(col, false));
 
     bfs(curPos);
 
