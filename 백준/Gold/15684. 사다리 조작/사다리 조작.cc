@@ -21,20 +21,20 @@ bool match() {
     return true;
 }
 
-void backtrack(int idx, int cnt) {
-    if (cnt > 3)    return;
-
-    if (match()) {
-        horizon_num = min(cnt, horizon_num);
+void backtrack(int max_cnt, int cnt) {
+    if (horizon_num != 1e7) return;
+    if (max_cnt == cnt) {
+        if (match())    horizon_num = min(cnt, horizon_num);
         return;
     }
-
-    for (int i = idx; i <= h; i++) {
-        for (int j = 1; j < n; j++) {
-            if (horizon_line[j - 1][i] || horizon_line[j][i] || horizon_line[j + 1][i]) continue;
-            horizon_line[j][i] = true;
-            backtrack(i, cnt + 1);
-            horizon_line[j][i] = false;
+    
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j <= h; j++) {
+            if (horizon_line[i - 1][j] || horizon_line[i][j] || horizon_line[i + 1][j]) continue;
+            horizon_line[i][j] = true;
+            backtrack(max_cnt, cnt + 1);
+            horizon_line[i][j] = false;
+            while(!horizon_line[i - 1][j] && !horizon_line[i + 1][j])   j++;
         }
     }
 }
@@ -50,7 +50,7 @@ int main() {
         horizon_line[b][a] = true;
     }
 
-    backtrack(1, 0);
+    for (int i = 0; i < 4 && horizon_num == 1e7; i++)   backtrack(i, 0);
 
     if (horizon_num == 1e7) horizon_num = -1;
     cout << horizon_num;
