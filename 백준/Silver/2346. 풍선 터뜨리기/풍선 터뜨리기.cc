@@ -1,37 +1,36 @@
 #include <iostream>
-#include <deque>
-#include <utility>
+
+#define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+#define NUM first
+#define COUNT second
+#define MAX_NUM 1000
+
 using namespace std;
-#define Num first
-#define Val second
 
 int main() {
-    int N, balloon_num, ord = 1;
-    
-    cin >> N;
-    deque<pair<int, int>> balloons;
-
-    for (int i = 1; i <= N; i++) {
-        cin >> balloon_num;
-        balloons.push_back(make_pair(i, balloon_num));
+    FAST_IO
+    pair<int, int> balloon[MAX_NUM]; 
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++) {
+        cin >> balloon[i].COUNT;
+        balloon[i].NUM = i + 1;
     }
 
-    while (!balloons.empty()) {
-        if (ord > 1){ // Right shift
-            balloons.push_back(balloons.front());
-            balloons.pop_front();
-            ord--;
+    int count = 0, i = 0;
+    while (--n) {
+        cout << balloon[i].NUM << ' ';
+        count = balloon[i].COUNT;
+        for (int j = i; j < n; j++) balloon[j] = balloon[j + 1];
+        if (count > 0) {
+            count--;
+            i = (count % n + i) % n;
         }
-        else if (ord < 0){ // Left shift
-            balloons.push_front(balloons.back());
-            balloons.pop_back();
-            ord++;
+        else if (count < 0) {
+            count = -count;
+            i = (n + i - (count % n)) % n;
         }
-        else { // Balloon Bomb!!
-            ord = balloons.front().Val;
-            cout << balloons.front().Num << ' ';
-            balloons.pop_front();
-        }
+        else if (count == 0 && i == n) i = 0;
     }
+    cout << balloon[0].NUM;
 }
-// ios::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
