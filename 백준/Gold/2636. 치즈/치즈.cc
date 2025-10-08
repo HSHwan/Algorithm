@@ -5,7 +5,6 @@
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 #define X first
 #define Y second
-#define OUT -1
 #define CHEESE 1
 #define EMPTY 0
 
@@ -17,20 +16,6 @@ int row, col;
 vector<vector<int>> board;
 vector<pii> dirs = {{0, -1}, {-1, 0}, {1, 0}, {0, 1}};
 bool checked;
-
-void bfs(int x, int y, vector<vector<bool>>& visited) {
-    for (pii dir : dirs) {
-        int nxt_x = x + dir.X, nxt_y = y + dir.Y;
-        if (nxt_x >= row || nxt_x < 0 || nxt_y >= col || nxt_y < 0) {
-            checked = true;
-            return;
-        }
-        if (!visited[nxt_x][nxt_y]) {
-            visited[nxt_x][nxt_y] = true;
-            bfs(nxt_x, nxt_y, visited);
-        }
-    }
-}
 
 int main() {
     FAST_IO
