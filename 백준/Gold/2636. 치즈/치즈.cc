@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 #define X first
 #define Y second
@@ -14,17 +16,20 @@ typedef pair<int, int> pii;
 int row, col;
 vector<vector<int>> board;
 vector<pii> dirs = {{0, -1}, {-1, 0}, {1, 0}, {0, 1}};
+bool checked;
 
-int dfs(vector<vector<int>>& b, vector<vector<bool>>& visited, int x, int y) {
+void bfs(int x, int y, vector<vector<bool>>& visited) {
     for (pii dir : dirs) {
         int nxt_x = x + dir.X, nxt_y = y + dir.Y;
-        if (nxt_x >= row || nxt_x < 0 || nxt_y >= col || nxt_y < 0) return OUT;
-        if (!visited[nxt_x][nxt_y] && b[nxt_x][nxt_y] == EMPTY) {
+        if (nxt_x >= row || nxt_x < 0 || nxt_y >= col || nxt_y < 0) {
+            checked = true;
+            return;
+        }
+        if (!visited[nxt_x][nxt_y]) {
             visited[nxt_x][nxt_y] = true;
-            if (dfs(b, visited, nxt_x, nxt_y) == OUT)  return OUT;
+            bfs(nxt_x, nxt_y, visited);
         }
     }
-    return CHEESE;
 }
 
 int main() {
@@ -43,19 +48,30 @@ int main() {
     while (cheese_cnt) {
         time++;
         end_cheese = cheese_cnt;
-        vector<vector<int>> saved_board = board;
+        vector<pii> target;
+        vector<vector<bool>> visited(row, vector<bool>(col, false));
         
-        for (int i = 0; i < row; i++) {
-            for (int j = 0; j < col; j++) {
-                if (saved_board[i][j] == CHEESE) {
-                    vector<vector<bool>> visited(row, vector<bool>(col, false));
-                    if (dfs(saved_board, visited, i, j) == OUT) {
-                        board[i][j] = EMPTY;
-                        cheese_cnt--;
-                    }
-                }
+        queue<pii> blank_q;
+
+        blank_q.push({0, 0});
+        visited[0][0] = true;
+
+        while (!blank_q.empty()) {
+            pii cur = blank_q.front();
+            blank_q.pop();
+
+            for (pii dir : dirs) {
+                int nxt_x = cur.X + dir.X, nxt_y = cur.Y + dir.Y;
+                if (nxt_x >= row || nxt_x < 0 || nxt_y >= col || nxt_y < 0 || visited[nxt_x][nxt_y])    continue;
+                visited[nxt_x][nxt_y] = true;
+                if (board[nxt_x][nxt_y] == CHEESE)  target.push_back({nxt_x, nxt_y});
+                else    blank_q.push({nxt_x, nxt_y});
             }
         }
+        for (pii t : target) {
+            board[t.X][t.Y] = EMPTY;
+        }
+        cheese_cnt -= target.size();
     }
 
     cout << time << '\n' << end_cheese;
