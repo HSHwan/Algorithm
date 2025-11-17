@@ -2,15 +2,15 @@
 #include <vector>
 #include <queue>
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-#define X first.first
-#define Y first.second
-#define R second
+#define X second.first
+#define Y second.second
+#define R first
 #define MAX_R 1e7
 
 using namespace std;
 
 typedef pair<int, int> pii;
-typedef pair<pair<int, int>, int> ppi;
+typedef pair<int, pair<int, int>> ppi;
 
 void print_black_rupee(int n, int rupee) {
     cout << "Problem " << n << ": " << rupee << '\n';
@@ -31,20 +31,21 @@ int main() {
         }
         
         vector<vector<int>> rupee_sum(n, vector<int>(n, MAX_R));
-        queue<ppi> q;
+        priority_queue<ppi> pq;
         rupee_sum[0][0] = cave[0][0];
-        q.push({{0, 0}, rupee_sum[0][0]});
+        pq.push({-rupee_sum[0][0], {0, 0}});
 
-        while (!q.empty()) {
-            ppi cur = q.front();
-            q.pop();
+        while (!pq.empty()) {
+            ppi cur = pq.top();
+            pq.pop();
+            if (cur.X == n - 1 && cur.Y == n - 1)   break;
             for (pii dir : dirs) {
                 int nxt_x = cur.X + dir.first, nxt_y = cur.Y + dir.second;
                 if (nxt_x < 0 || nxt_x >= n || nxt_y < 0 || nxt_y >= n) continue;
-                int nxt_sum = cur.R + cave[nxt_x][nxt_y];
+                int nxt_sum = -cur.R + cave[nxt_x][nxt_y];
                 if (nxt_sum >= rupee_sum[nxt_x][nxt_y]) continue;
                 rupee_sum[nxt_x][nxt_y] = nxt_sum;
-                q.push({{nxt_x, nxt_y}, nxt_sum});
+                pq.push({-nxt_sum, {nxt_x, nxt_y}});        
             }
         }
 
