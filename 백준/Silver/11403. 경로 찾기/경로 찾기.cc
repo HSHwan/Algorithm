@@ -4,41 +4,30 @@
 
 using namespace std;
 
-int n;
-vector<vector<int>> graph;
-vector<vector<bool>> visited;
-int start = 0;
-
-void dfs(int v) {
-    for (int nxt : graph[v]) {
-        if (visited[start][nxt]) continue;
-        visited[start][nxt] = true;
-        dfs(nxt);
-    }   
-}
-
 int main() {
     FAST_IO
     
+    int n;
     cin >> n;
-    graph.resize(n);
+    vector<vector<int>> graph(n, vector<int>(n));
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            int is_connected;
-            cin >> is_connected;
-            if (is_connected)   graph[i].push_back(j);
+            cin >> graph[i][j];
         }
     }
 
-    visited.assign(n, vector<bool>(n, false));
-    for (int i = 0; i < n; i++) {
-        start = i;
-        dfs(i);
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (graph[i][k] && graph[k][j]) graph[i][j] = 1;
+            }
+        }
     }
+
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            cout << visited[i][j] << ' ';
+            cout << graph[i][j] << ' ';
         }
         cout << '\n';
     }
