@@ -8,7 +8,6 @@ int main() {
     cin >> n;
     vector<int> dp(n + 1, 4);
 
-    dp[0] = 0;
     for (int i = 1; i * i <= n; i++) {
         dp[i * i] = 1;
         for (int j = 1; j <= i && i * i + j * j <= n; j++) {
