@@ -1,43 +1,36 @@
 #include <iostream>
 #include <vector>
-#include <queue>
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-#define A first
-#define D second
 
 using namespace std;
 
-typedef pair<int, int> pii;
+vector<vector<int>> tree;
+vector<int> dep, ans;
+
+void dfs(int v, int d) {
+    dep[v] = d;
+    for (int nxt : tree[v]) {
+        if (dep[nxt] != -1)   continue;
+        ans[nxt] = v;
+        dfs(nxt, d + 1);
+    }
+}
 
 int main() {
     FAST_IO
     int n;
     cin >> n;
-    vector<vector<int>> tree(n + 1);
+    tree.resize(n + 1);
     for (int i = 1; i < n; i++) {
         int u, v;
         cin >> u >> v;
         tree[u].push_back(v);
         tree[v].push_back(u);
     }
-    vector<int> dep(n + 1, -1), ans(n + 1);
+    dep.assign(n + 1, -1);
+    ans.assign(n + 1, 0);
 
-    queue<pii> q;
-    q.push({1, 0});
-    dep[1] = 0;
-    ans[1] = 1;
-
-    while (!q.empty()) {
-        pii cur = q.front();
-        q.pop();
-        for (int v : tree[cur.A]) {
-            if (dep[v] != -1)   continue;
-            dep[v] = cur.D + 1;
-            q.push({v, dep[v]});
-            ans[v] = cur.A;
-        }
-    }
-
+    dfs(1, 0);
     int m;
     cin >> m;
     for (int i = 0; i < m; i++) {
