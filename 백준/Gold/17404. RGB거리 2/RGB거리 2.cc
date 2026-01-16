@@ -10,46 +10,32 @@ using namespace std;
 
 int main() {
     FAST_IO
-
-    vector<vector<int>> color_cost;
-
     int n;
     cin >> n;
 
-    color_cost.resize(n, vector<int>(3));
+    vector<vector<int>> color_cost(n, vector<int>(3));
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < 3; j++) {
-            cin >> color_cost[i][j];
-        }
+        cin >> color_cost[i][R] >> color_cost[i][G] >> color_cost[i][B];
     }
 
-    vector<vector<vector<int>>> dp(n, vector<vector<int>>(3, vector<int>(3, INF)));
-    dp[0][R][R] = color_cost[0][R];
-    dp[0][G][G] = color_cost[0][G];
-    dp[0][B][B] = color_cost[0][B];
+    vector<vector<int>> dp(n, vector<int>(3));
+    int min_cost = INF;
+    for (int start = 0; start < 3; start++) {
+        for (int i = 0; i < 3; i++) {
+            if (i == start) dp[0][i] = color_cost[0][i];
+            else    dp[0][i] = INF;
+        }
+        for (int i = 1; i < n; i++) {
+            dp[i][R] = color_cost[i][R] + min(dp[i - 1][G], dp[i - 1][B]);
+            dp[i][G] = color_cost[i][G] + min(dp[i - 1][R], dp[i - 1][B]);
+            dp[i][B] = color_cost[i][B] + min(dp[i - 1][R], dp[i - 1][G]);
+        }
 
-    dp[1][R][G] = color_cost[1][R] + dp[0][G][G];
-    dp[1][R][B] = color_cost[1][R] + dp[0][B][B];
-    dp[1][G][R] = color_cost[1][G] + dp[0][R][R];
-    dp[1][G][B] = color_cost[1][G] + dp[0][B][B];
-    dp[1][B][R] = color_cost[1][B] + dp[0][R][R];
-    dp[1][B][G] = color_cost[1][B] + dp[0][G][G];
-
-    for (int i = 2; i < n - 1; i++) {
-        for (int k = 0; k < 3; k++) {
-            dp[i][R][k] = min(dp[i - 1][G][k], dp[i - 1][B][k]) + color_cost[i][R];
-            dp[i][G][k] = min(dp[i - 1][R][k], dp[i - 1][B][k]) + color_cost[i][G];
-            dp[i][B][k] = min(dp[i - 1][R][k], dp[i - 1][G][k]) + color_cost[i][B];
+        for (int i = 0; i < 3; i++) {
+            if (i == start) continue;
+            min_cost = min(min_cost, dp[n - 1][i]);
         }
     }
-
-    dp[n - 1][R][G] = min(dp[n - 2][G][G], dp[n - 2][B][G]) + color_cost[n - 1][R];
-    dp[n - 1][R][B] = min(dp[n - 2][B][B], dp[n - 2][G][B]) + color_cost[n - 1][R];
-    dp[n - 1][G][R] = min(dp[n - 2][R][R], dp[n - 2][B][R]) + color_cost[n - 1][G];
-    dp[n - 1][G][B] = min(dp[n - 2][B][B], dp[n - 2][R][B]) + color_cost[n - 1][G];
-    dp[n - 1][B][R] = min(dp[n - 2][G][R], dp[n - 2][R][R]) + color_cost[n - 1][B];
-    dp[n - 1][B][G] = min(dp[n - 2][R][G], dp[n - 2][G][G]) + color_cost[n - 1][B];
-
-    int min_cost = min(min(min(dp[n - 1][R][G], dp[n - 1][R][B]), min(dp[n - 1][G][R], dp[n - 1][G][B])), min(dp[n - 1][B][R], dp[n - 1][B][G]));
+    
     cout << min_cost;
 }
