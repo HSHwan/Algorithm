@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <queue>
+#include <algorithm>
 #define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 #define ROOT -1
 #define C first
@@ -36,23 +36,22 @@ int main() {
     int n, m;
     cin >> n >> m;
 
-    priority_queue<pip, vector<pip>, greater<>> pq;
+    vector<pip> edges;
     for (int i = 0; i < m; i++) {
         int a, b, c;
         cin >> a >> b >> c;
-        pq.push({c, {a, b}});
+        edges.push_back({c, {a, b}});
     }
 
     root.assign(n + 1, ROOT);
     root_rank.assign(n + 1, 0);
+    sort(edges.begin(), edges.end());
     int best_sum = 0, last_connected = 0;
-    while (!pq.empty()) {
-        pip edge = pq.top();
+    for (pip edge : edges) {
         if (union_vertex(edge.U, edge.V)) {
             best_sum += edge.C;
             last_connected = edge.C;
         }   
-        pq.pop();
     }
 
     cout << best_sum - last_connected;
