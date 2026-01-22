@@ -27,7 +27,7 @@ int main() {
     vector<int> board(MAX, 2 * MAX);
 
     board[1] = 0;
-    for (int k = 0; k < MAX; k++) {
+    for (int k = 0; k < 2; k++) {
         for (int i = 1; i < MAX; i++) {
             for (int j = 1; j <= 6; j++) {
                 int nxt = i + j;
