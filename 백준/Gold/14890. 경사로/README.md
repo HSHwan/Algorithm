@@ -51,7 +51,7 @@
 
 <p>경사로를 놓을 수 없는 경우는 아래와 같다.</p>
 
-<p style="text-align:center"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/problem/14890/4.png" style="height:158px; width:1023px"></p>
+<p style="text-align:center"><img alt="" src="" style="height:158px; width:1023px"></p>
 
 <p>위의 그림의 가장 왼쪽부터 1번, 2번, 3번, 4번 예제라고 했을 때, 1번은 높이 차이가 1이 아니라서, 2번은 경사로를 바닥과 접하게 놓지 않아서, 3번은 겹쳐서 놓아서, 4번은 기울이게 놓아서 불가능한 경우이다.</p>
 
