@@ -1,54 +1,48 @@
 #include <iostream>
-#include <algorithm>
+#include <list>
+#define FAST_IO ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
 
 using namespace std;
 
 int main() {
-    ios::sync_with_stdio(false), cin.tie(NULL);
+    FAST_IO
 
-    string leftStr, nextStr;
-    cin >> leftStr;
+    list<char> str;
+    string in_str;
+    cin >> in_str;
 
-    int cmdNum;
-    cin >> cmdNum;
+    for (char ch : in_str)  str.push_back(ch);
+    auto cursor = str.end();
 
-    for (int i = 0; i < cmdNum; i++) {
-        char cmd;
-        cin >> cmd;
-
-        switch (cmd) {
-            case 'L': {
-                if (!leftStr.empty()) {
-                    nextStr.push_back(leftStr.back());
-                    leftStr.pop_back();
-                }
-                break;
-            }
-            
-            case 'D': {
-                if (!nextStr.empty()) {
-                    leftStr.push_back(nextStr.back());
-                    nextStr.pop_back();
-                }
-                break;
-            }
-
-            case 'B': {
-                if (!leftStr.empty()) {
-                    leftStr.pop_back();
-                }
-                break;
-            }
-
+    int cmd_num;
+    cin >> cmd_num;
+    while (cmd_num--) {
+        char op;
+        cin >> op;
+        switch (op) {
             case 'P': {
-                char nextChar;
-                cin >> nextChar;
-                leftStr.push_back(nextChar);
+                char added;
+                cin >> added;
+                str.insert(cursor, added);
+                break;
+            }
+            case 'L': {
+                if (cursor != str.begin())  cursor--;
+                break;
+            }
+            case 'D': {
+                if (cursor != str.end())    cursor++;
+                break;
+            }
+            case 'B': {
+                if (cursor != str.begin()) {
+                    cursor--;
+                    cursor = str.erase(cursor);
+                }
                 break;
             }
         }
     }
 
-    reverse(nextStr.begin(), nextStr.end());
-    cout << leftStr + nextStr;
+    for (char ch : str) cout << ch;
 }
