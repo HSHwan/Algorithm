@@ -1,12 +1,12 @@
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <string>
 using namespace std;
 
 int N,M;
 string poketmon, problem;
 string poketmon_book_name[100001];
-map<string, int> poketmon_book_num;
+unordered_map<string, int> poketmon_book_num;
 
 int main() {
     ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
