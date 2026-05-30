@@ -6,12 +6,6 @@ using namespace std;
 
 string solution(int n) {
     string answer = "";
-    // 1 2 3 -> 1 2 4
-    // 4 5 6 -> 1 1 1
-    // 7 8 9 -> 2 2 2
-    // 10 11 12 -> 4 4 4
-    // 3^n + 3^(n-1) + 3^(n-2) + ... + 3^0 * 3
-    
     while (n) {
         if (n % 3 == 1) {
             answer += '1';
