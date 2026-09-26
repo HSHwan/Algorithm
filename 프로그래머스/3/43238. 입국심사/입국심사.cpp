@@ -1,12 +1,10 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
 long long solution(int n, vector<int> times) {
-    long long low = 1;
-    long long high = (long long)*max_element(times.begin(), times.end()) * n;
+    long long low = 1, high = 1e18;
     
     while (low <= high) {
         long long mid = (low + high) / 2;
