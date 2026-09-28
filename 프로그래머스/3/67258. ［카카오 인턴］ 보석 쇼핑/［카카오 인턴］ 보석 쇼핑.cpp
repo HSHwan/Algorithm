@@ -1,15 +1,15 @@
 #include <string>
 #include <vector>
-#include <map>
-#include <set>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
 vector<int> solution(vector<string> gems) {
     vector<int> answer = {1, 1};
-    map<string, int> gem_num;
+    unordered_map<string, int> gem_num;
     int total_num = gems.size();
-    int gem_count = set<string>(gems.begin(), gems.end()).size(), cur_count = 0;
+    int gem_count = unordered_set<string>(gems.begin(), gems.end()).size(), cur_count = 0;
     int start = 0, end = 0;
     int min_len = total_num + 1;
     while (end < total_num) {
@@ -31,5 +31,3 @@ vector<int> solution(vector<string> gems) {
     
     return answer;
 }
-
-//[0, 1, 1, 0, 0, 2, 3, 0]
