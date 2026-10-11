@@ -7,7 +7,7 @@ using namespace std;
 vector<vector<vector<int>>> pipes;
 
 int backtrack(int n, int k, unordered_set<int> infected) {
-    if (n == k || infected.size() == pipes[0].size())
+    if (n == k || infected.size() == pipes[0].size() - 1)
         return infected.size();
     int max_count = infected.size();
     for (int i = 1; i <= 3; i++) {
@@ -30,7 +30,7 @@ int backtrack(int n, int k, unordered_set<int> infected) {
             }
         }
         
-        if (nxt_infected.size() == max_count)   continue;
+        if (nxt_infected.size() == infected.size()) continue;
         max_count = max(max_count, backtrack(n + 1, k, nxt_infected));
     }
     return max_count;
