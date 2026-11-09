@@ -28,7 +28,6 @@ bool comp(string a, string b) {
     string a_head = parse_head(a), b_head = parse_head(b);
     if (a_head == b_head) {
         int a_number = parse_number(a, a_head.size()), b_number = parse_number(b, b_head.size());
-        // if (a_number == b_number)   return orders[a] < orders[b];
         return a_number < b_number;
     }
     return a_head < b_head;
